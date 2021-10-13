@@ -1,0 +1,86 @@
+<html>
+
+<head>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
+</head>
+
+<body>
+
+  <div id="app" class="ui container">
+    <h1>GitHub Profiles</h1>
+    {{me}}
+    <github-user-card username="kjo1"></github-user-card>
+  </div>
+
+  <!-- Template for GitHub card -->
+  <script type="text/x-template" id="github-user-template">
+      <div class="ui card">
+        <div class="image">
+          <img src="https://semantic-ui.com/images/avatar2/large/kristy.png">
+        </div>
+        <div class="content">
+          <a class="header">{{user.name? user.name: user.login}}</a>
+          <div class="meta">
+            <span class="date">Joined in {{user.created_at}}</span>
+          </div>
+          <div class="description">
+            {{user.login}} has {{user.public_repos}} public repos.
+          </div>
+        </div>
+        <div class="extra content">
+          <a>
+            <i class="user icon"></i>
+            {{user.followers}} followers
+          </a>
+        </div>
+      </div>
+    </script>
+
+  <!-- Import Vue.js and axios -->
+  <script src="https://unpkg.com/vue@3"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+  <!-- Your JavaScript Code :) -->
+  <script>
+    Vue.createApp({})
+      .component('github-user-card', {
+        template: '#github-user-template',
+        props: {
+          username: { type: String, required: true }
+        },
+
+        data()
+        {
+          return {
+            user: {}
+          }
+        },
+
+        // computed: {
+        //   join()
+        //   {
+        //     const result = user.created_at
+        //     console.log(result);
+        //     return result;
+        //   }
+        // },
+
+        async mounted()
+        {
+          await this.loadUser();
+        },
+
+        methods: {
+          async loadUser()
+          {
+            await axios.get(`https://api.github.com/users/${this.username}`).then((response) => this.user = response.data);
+            console.table(this.user);
+          },
+        },
+      })
+      .mount('#app')
+  </script>
+</body>
+
+</html>

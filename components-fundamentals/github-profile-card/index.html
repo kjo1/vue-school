@@ -17,12 +17,12 @@
   <script type="text/x-template" id="github-user-template">
       <div class="ui card">
         <div class="image">
-          <img src="https://semantic-ui.com/images/avatar2/large/kristy.png">
+          <img src="https://avatars.githubusercontent.com/u/44075333?v=4">
         </div>
         <div class="content">
           <a class="header">{{user.name? user.name: user.login}}</a>
           <div class="meta">
-            <span class="date">Joined in {{user.created_at}}</span>
+            <span class="date">Joined in {{joinedYear}}</span>
           </div>
           <div class="description">
             {{user.login}} has {{user.public_repos}} public repos.
@@ -57,14 +57,14 @@
           }
         },
 
-        // computed: {
-        //   join()
-        //   {
-        //     const result = user.created_at
-        //     console.log(result);
-        //     return result;
-        //   }
-        // },
+        computed: {
+          joinedYear()
+          {
+            // console.log(this.user.created_at || '');
+            const result = this.user.created_at?.substring(0, 4)
+            return result;
+          }
+        },
 
         async mounted()
         {
@@ -75,7 +75,6 @@
           async loadUser()
           {
             await axios.get(`https://api.github.com/users/${this.username}`).then((response) => this.user = response.data);
-            console.table(this.user);
           },
         },
       })
